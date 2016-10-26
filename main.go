@@ -6,11 +6,11 @@ import (
   "fmt"
   "io/ioutil"
   "net/http"
-  "os"
+  "strings"
 )
 
 type jsonProduct struct {
-  Date string `json:"date"`
+  Date string `json:"release_date"`
   BrandName string `json:"brand_name"`
   ProductDescription string `json:"product_description"`
   Reason string `json:"reason"`
@@ -62,11 +62,14 @@ func main() {
       fmt.Println(err)
     }
 
-    // now write to JSON file
-    jsonFile, err := os.Create("./Products.json")
-    defer jsonFile.Close()
-    jsonFile.Write(jsonData)
-    jsonFile.Close()
+    rails_url := "http://localhost:3000/recalls"
+    var jsonStr = string(jsonData)
+    request, err := http.Post(rails_url, "application/json", strings.NewReader(jsonStr))
+    if err != nil {
+      // handle error
+      println(err)
+    }
+    defer request.Body.Close()
   }
   if err != nil {
     panic(err.Error())
