@@ -6,17 +6,18 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 )
 
 type jsonProduct struct {
-	Date               string `json:"release_date"`
-	BrandName          string `json:"brand_name"`
-	ProductDescription string `json:"product_description"`
-	Reason             string `json:"reason"`
-	Company            string `json:"company"`
-	CompanyReleaseLink string `json:"company_release_link"`
+	Recall struct {
+		Date               string `json:"release_date"`
+		BrandName          string `json:"brand_name"`
+		ProductDescription string `json:"product_description"`
+		Reason             string `json:"reason"`
+		Company            string `json:"name"`
+		CompanyReleaseLink string `json:"company_release_link"`
+	}	`json:"recall"`
 }
 
 type Product struct {
@@ -49,12 +50,12 @@ func main() {
 		var allProducts []jsonProduct
 
 		for _, value := range r.Products {
-			oneProduct.Date = value.Date
-			oneProduct.BrandName = value.BrandName
-			oneProduct.ProductDescription = value.ProductDescription
-			oneProduct.Reason = value.Reason
-			oneProduct.Company = value.Company
-			oneProduct.CompanyReleaseLink = value.CompanyReleaseLink
+			oneProduct.Recall.Date = value.Date
+			oneProduct.Recall.BrandName = value.BrandName
+			oneProduct.Recall.ProductDescription = value.ProductDescription
+			oneProduct.Recall.Reason = value.Reason
+			oneProduct.Recall.Company = value.Company
+			oneProduct.Recall.CompanyReleaseLink = value.CompanyReleaseLink
 			allProducts = append(allProducts, oneProduct)
 		}
 
@@ -63,9 +64,9 @@ func main() {
 			fmt.Println(err)
 		}
 
-		sinatra_url := os.Getenv("SINATRA_URL")
+		rails_url := "http://localhost:3000/recalls"
 		var jsonStr = string(jsonData)
-		request, err := http.Post(sinatra_url, "application/json", strings.NewReader(jsonStr))
+		request, err := http.Post(rails_url, "application/json", strings.NewReader(jsonStr))
 		if err != nil {
 			// handle error
 			println(err)
