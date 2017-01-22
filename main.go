@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"github.com/jasonlvhit/gocron"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type jsonProduct struct {
@@ -32,9 +34,10 @@ type Recall struct {
 	Products []Product `xml:"PRODUCT"`
 }
 
-func main() {
-	fda_url := "http://www.fda.gov/DataSets/Recalls/Food/Food.xml"
-	response, err := http.Get(fda_url)
+// GET to fda dataset site
+func getFdaJson() {
+	fdaUrl := "http://www.fda.gov/DataSets/Recalls/Food/Food.xml"
+	response, err := http.Get(fdaUrl)
 	body, err := ioutil.ReadAll(response.Body)
 	defer response.Body.Close()
 	if response.Status == "200 OK" {
@@ -62,11 +65,12 @@ func main() {
 			fmt.Println(err)
 		}
 
-		rails_url := "http://localhost:3000/recalls"
+		// POST to rails app
+		railsUrl := "http://localhost:3000/recalls"
 		var jsonStr = string(jsonData)
-		request, err := http.Post(rails_url, "application/json", strings.NewReader(jsonStr))
+		request, err := http.Post(railsUrl, "application/json", strings.NewReader(jsonStr))
+		fmt.Println("I am getting fda data...", time.Now())
 		if err != nil {
-			// handle error
 			println(err)
 		}
 		defer request.Body.Close()
@@ -74,4 +78,12 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
+}
+
+// initiate process with chron job
+func main() {
+    ch := gocron.Start()
+    gocron.Every(10).Seconds().Do(getFdaJson)
+
+    <-ch
 }
