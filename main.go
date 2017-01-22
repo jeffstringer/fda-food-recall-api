@@ -12,10 +12,9 @@ import (
 type jsonProduct struct {
 	Recall struct {
 		Date               string `json:"release_date"`
-		BrandName          string `json:"brand_name"`
+		BrandName          string `json:"name"`
 		ProductDescription string `json:"product_description"`
 		Reason             string `json:"reason"`
-		Company            string `json:"name"`
 		CompanyReleaseLink string `json:"company_release_link"`
 	}	`json:"recall"`
 }
@@ -54,7 +53,6 @@ func main() {
 			oneProduct.Recall.BrandName = value.BrandName
 			oneProduct.Recall.ProductDescription = value.ProductDescription
 			oneProduct.Recall.Reason = value.Reason
-			oneProduct.Recall.Company = value.Company
 			oneProduct.Recall.CompanyReleaseLink = value.CompanyReleaseLink
 			allProducts = append(allProducts, oneProduct)
 		}
