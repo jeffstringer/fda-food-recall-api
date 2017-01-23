@@ -38,14 +38,11 @@ type Recall struct {
 func getFdaJson() {
 	fdaUrl := "http://www.fda.gov/DataSets/Recalls/Food/Food.xml"
 	response, err := http.Get(fdaUrl)
-	body, err := ioutil.ReadAll(response.Body)
+	body, _ := ioutil.ReadAll(response.Body)
 	defer response.Body.Close()
 	if response.Status == "200 OK" {
 		var r Recall
-		err = xml.Unmarshal(body, &r)
-		if err != nil {
-			panic(err.Error())
-		}
+		xml.Unmarshal(body, &r)
 
 		// convert to JSON
 		var oneProduct jsonProduct
@@ -60,19 +57,13 @@ func getFdaJson() {
 			allProducts = append(allProducts, oneProduct)
 		}
 
-		jsonData, err := json.Marshal(allProducts)
-		if err != nil {
-			fmt.Println(err)
-		}
+		jsonData, _ := json.Marshal(allProducts)
 
 		// POST to rails app
 		railsUrl := "http://localhost:3000/recalls"
 		var jsonStr = string(jsonData)
-		request, err := http.Post(railsUrl, "application/json", strings.NewReader(jsonStr))
+		request, _ := http.Post(railsUrl, "application/json", strings.NewReader(jsonStr))
 		fmt.Println("I am getting fda data...", time.Now())
-		if err != nil {
-			println(err)
-		}
 		defer request.Body.Close()
 	}
 	if err != nil {
