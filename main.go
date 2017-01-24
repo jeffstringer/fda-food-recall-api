@@ -35,19 +35,18 @@ type Recall struct {
 }
 
 // GET to fda dataset site
-func getFdaJson() {
+func postRecallJson() {
 	fdaUrl := "http://www.fda.gov/DataSets/Recalls/Food/Food.xml"
 	response, err := http.Get(fdaUrl)
-	body, _ := ioutil.ReadAll(response.Body)
+	xmlFile, _ := ioutil.ReadAll(response.Body)
 	defer response.Body.Close()
 	if response.Status == "200 OK" {
 		var r Recall
-		xml.Unmarshal(body, &r)
+		xml.Unmarshal(xmlFile, &r)
 
 		// convert to JSON
 		var oneProduct jsonProduct
 		var allProducts []jsonProduct
-
 		for _, value := range r.Products {
 			oneProduct.Recall.Date = value.Date
 			oneProduct.Recall.BrandName = value.BrandName
@@ -56,13 +55,12 @@ func getFdaJson() {
 			oneProduct.Recall.CompanyReleaseLink = value.CompanyReleaseLink
 			allProducts = append(allProducts, oneProduct)
 		}
-
 		jsonData, _ := json.Marshal(allProducts)
 
 		// POST to rails app
-		railsUrl := "http://localhost:3000/recalls"
+		postUrl := "http://localhost:3000/recalls"
 		var jsonStr = string(jsonData)
-		request, _ := http.Post(railsUrl, "application/json", strings.NewReader(jsonStr))
+		request, _ := http.Post(postUrl, "application/json", strings.NewReader(jsonStr))
 		fmt.Println("I am getting fda data...", time.Now())
 		defer request.Body.Close()
 	}
@@ -74,7 +72,7 @@ func getFdaJson() {
 // initiate process with chron job
 func main() {
     ch := gocron.Start()
-    gocron.Every(10).Seconds().Do(getFdaJson)
+    gocron.Every(10).Seconds().Do(postRecallJson)
 
     <-ch
 }
