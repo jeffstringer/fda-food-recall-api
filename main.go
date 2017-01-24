@@ -75,7 +75,7 @@ func postRecallJson() {
 // initiate process with chron job
 func main() {
     ch := gocron.Start()
-    gocron.Every(10).Seconds().Do(postRecallJson)
+    gocron.Every(1).Minute().Do(postRecallJson)
 
     <-ch
 }
