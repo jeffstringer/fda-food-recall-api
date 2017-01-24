@@ -5,8 +5,10 @@ import (
 	"encoding/xml"
 	"fmt"
 	"github.com/jasonlvhit/gocron"
+	"github.com/subosito/gotenv"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -58,7 +60,8 @@ func postRecallJson() {
 		jsonData, _ := json.Marshal(allProducts)
 
 		// POST to rails app
-		postUrl := "http://localhost:3000/recalls"
+		gotenv.Load()
+		postUrl := os.Getenv("POST_URL")
 		var jsonStr = string(jsonData)
 		request, _ := http.Post(postUrl, "application/json", strings.NewReader(jsonStr))
 		fmt.Println("I am getting fda data...", time.Now())
