@@ -35,19 +35,19 @@ type Recall struct {
 }
 
 // GET to fda dataset site
-func getFdaJson() {
+func getFdaXml() []byte {
 	fdaUrl := "http://www.fda.gov/DataSets/Recalls/Food/Food.xml"
-	response, err := http.Get(fdaUrl)
-	body, err := ioutil.ReadAll(response.Body)
+	response, _ := http.Get(fdaUrl)
+	xmlFile, _ := ioutil.ReadAll(response.Body)
 	defer response.Body.Close()
-	if response.Status == "200 OK" {
-		var r Recall
-		err = xml.Unmarshal(body, &r)
-		if err != nil {
-			panic(err.Error())
-		}
+	return xmlFile
+}
 
-		// convert to JSON
+// convert xml to json
+func buildJson(xmlFile []byte) string {
+		var r Recall
+		xml.Unmarshal(xmlFile, &r)
+
 		var oneProduct jsonProduct
 		var allProducts []jsonProduct
 
@@ -60,30 +60,31 @@ func getFdaJson() {
 			allProducts = append(allProducts, oneProduct)
 		}
 
-		jsonData, err := json.Marshal(allProducts)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		// POST to rails app
-		railsUrl := "http://localhost:3000/recalls"
+		jsonData, _ := json.Marshal(allProducts)
 		var jsonStr = string(jsonData)
-		request, err := http.Post(railsUrl, "application/json", strings.NewReader(jsonStr))
-		fmt.Println("I am getting fda data...", time.Now())
-		if err != nil {
-			println(err)
-		}
-		defer request.Body.Close()
+		return jsonStr
 	}
-	if err != nil {
-		panic(err.Error())
-	}
+
+// // POST json to rails app
+func postJson(jsonStr string) {
+	str := strings.NewReader(jsonStr)
+	railsUrl := "http://localhost:3000/recalls"
+	request, _ := http.Post(railsUrl, "application/json", str)
+	fmt.Println("I am getting fda data...", time.Now())
+	defer request.Body.Close()
+}
+
+
+func process() {
+	xml := getFdaXml()
+	recallsJson := buildJson(xml)
+	postJson(recallsJson)
 }
 
 // initiate process with chron job
 func main() {
-    ch := gocron.Start()
-    gocron.Every(10).Seconds().Do(getFdaJson)
+  ch := gocron.Start()
+  gocron.Every(10).Seconds().Do(process)
 
-    <-ch
+  <-ch
 }
