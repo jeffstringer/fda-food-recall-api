@@ -5,8 +5,10 @@ import (
 	"encoding/xml"
 	"fmt"
 	"github.com/jasonlvhit/gocron"
+	"github.com/subosito/gotenv"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -50,7 +52,6 @@ func buildJson(xmlFile []byte) string {
 
 		var oneProduct jsonProduct
 		var allProducts []jsonProduct
-
 		for _, value := range r.Products {
 			oneProduct.Recall.Date = value.Date
 			oneProduct.Recall.BrandName = value.BrandName
@@ -68,8 +69,9 @@ func buildJson(xmlFile []byte) string {
 // // POST json to rails app
 func postJson(jsonStr string) {
 	str := strings.NewReader(jsonStr)
-	railsUrl := "http://localhost:3000/recalls"
-	request, _ := http.Post(railsUrl, "application/json", str)
+	gotenv.Load()
+	postUrl := os.Getenv("POST_URL")
+	request, _ := http.Post(postUrl, "application/json", str)
 	fmt.Println("I am getting fda data...", time.Now())
 	defer request.Body.Close()
 }
