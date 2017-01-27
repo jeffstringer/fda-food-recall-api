@@ -67,7 +67,7 @@ func buildJson(xmlFile []byte) string {
 		return jsonStr
 	}
 
-// // POST json to rails app
+// POST json to rails app
 func postJson(jsonStr string) {
 	str := strings.NewReader(jsonStr)
 	gotenv.Load()
