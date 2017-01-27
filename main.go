@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -86,7 +87,10 @@ func process() {
 // initiate process with chron job
 func main() {
   ch := gocron.Start()
-  gocron.Every(10).Seconds().Do(process)
+  gotenv.Load()
+  frequencyString := os.Getenv("FREQUENCY")
+  frequency, _ := strconv.ParseUint(frequencyString, 10, 64)
+  gocron.Every(frequency).Minutes().Do(process)
 
   <-ch
 }
