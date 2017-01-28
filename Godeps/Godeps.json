@@ -1,0 +1,16 @@
+{
+	"ImportPath": "github.com/jeffstringer/fda_recall_api",
+	"GoVersion": "go1.5",
+	"GodepVersion": "v78",
+	"Deps": [
+		{
+			"ImportPath": "github.com/jasonlvhit/gocron",
+			"Rev": "42a5804d37aa0b9239b265e894a16b8edbf52d54"
+		},
+		{
+			"ImportPath": "github.com/subosito/gotenv",
+			"Comment": "v1.0.0-10-g009e1f9",
+			"Rev": "009e1f9581dc712aba5682a279dee155ca3eeded"
+		}
+	]
+}
