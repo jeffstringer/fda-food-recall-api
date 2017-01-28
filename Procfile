@@ -1,1 +1,1 @@
-  web: fda-food-recall-api
+  web: fda_recall_api
