@@ -1,1 +1,1 @@
-  web: fda_recall_api -port=$PORT
+  web: fda_recall_api thin start -port=$PORT
