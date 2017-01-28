@@ -90,7 +90,7 @@ func main() {
   gotenv.Load()
   frequencyString := os.Getenv("FREQUENCY")
   frequency, _ := strconv.ParseUint(frequencyString, 10, 64)
-  gocron.Every(frequency).Minutes().Do(process)
+  gocron.Every(frequency).Seconds().Do(process)
 
   <-ch
 }
