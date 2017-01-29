@@ -73,7 +73,7 @@ func postJson(jsonStr string) {
 	gotenv.Load()
 	postUrl := os.Getenv("POST_URL")
 	request, _ := http.Post(postUrl, "application/json", str)
-	fmt.Println("I am getting fda data...", time.Now())
+	fmt.Println("I am posting fda json...", time.Now())
 	defer request.Body.Close()
 }
 
