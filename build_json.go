@@ -5,6 +5,18 @@ import (
   "encoding/xml"
 )
 
+/**
+"recall"=>
+  {
+    "release_date"=>"Sat, 28 Jan 2017 15:09:00 -0500",
+    "name"=>"ageLOC TR90",
+    "product_description"=>"Protein boost",
+    "reason"=>"Undeclared milk",
+    "company_release_link"=>"http://www.fda.gov/Safety/Recalls/ucm538725.htm"
+  }
+}
+**/
+
 type jsonRecall struct {
   Recall struct {
     Date               string `json:"release_date"`
@@ -14,6 +26,26 @@ type jsonRecall struct {
     CompanyReleaseLink string `json:"company_release_link"`
   } `json:"recall"`
 }
+
+/**
+<PRODUCT>
+  <DATE>Sat, 28 Jan 2017 15:09:00 -0500</DATE>
+  <BRAND_NAME>
+    <![CDATA[ ageLOC TR90 ]]>
+  </BRAND_NAME>
+  <PRODUCT_DESCRIPTION>
+    <![CDATA[ Protein boost ]]>
+  </PRODUCT_DESCRIPTION>
+  <REASON>
+    <![CDATA[ Undeclared milk ]]>
+  </REASON>
+  <COMPANY>
+    <![CDATA[ NSE Products, Inc. ]]>
+  </COMPANY>
+  <COMPANY_RELEASE_LINK>http://www.fda.gov/Safety/Recalls/ucm538725.htm</COMPANY_RELEASE_LINK>
+  <PHOTOS_LINK></PHOTOS_LINK>
+</PRODUCT>
+**/
 
 type Product struct {
   Date               string `xml:"DATE"`
