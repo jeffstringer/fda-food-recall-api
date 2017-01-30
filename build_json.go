@@ -5,7 +5,7 @@ import (
   "encoding/xml"
 )
 
-type jsonProduct struct {
+type jsonRecall struct {
   Recall struct {
     Date               string `json:"release_date"`
     BrandName          string `json:"name"`
@@ -24,27 +24,27 @@ type Product struct {
   CompanyReleaseLink string `xml:"COMPANY_RELEASE_LINK"`
 }
 
-type Recall struct {
+type productXml struct {
   Products []Product `xml:"PRODUCT"`
 }
 
 // convert xml to json
 func buildJson(xmlFile []byte) string {
-  var r Recall
-  xml.Unmarshal(xmlFile, &r)
+  var x productXml
+  xml.Unmarshal(xmlFile, &x)
 
-  var oneProduct jsonProduct
-  var allProducts []jsonProduct
-  for _, value := range r.Products {
-    oneProduct.Recall.Date = value.Date
-    oneProduct.Recall.BrandName = value.BrandName
-    oneProduct.Recall.ProductDescription = value.ProductDescription
-    oneProduct.Recall.Reason = value.Reason
-    oneProduct.Recall.CompanyReleaseLink = value.CompanyReleaseLink
-    allProducts = append(allProducts, oneProduct)
+  var recall jsonRecall
+  var recalls []jsonRecall
+  for _, value := range x.Products {
+    recall.Recall.Date = value.Date
+    recall.Recall.BrandName = value.BrandName
+    recall.Recall.ProductDescription = value.ProductDescription
+    recall.Recall.Reason = value.Reason
+    recall.Recall.CompanyReleaseLink = value.CompanyReleaseLink
+    recalls = append(recalls, recall)
   }
 
-  jsonData, _ := json.Marshal(allProducts)
+  jsonData, _ := json.Marshal(recalls)
   var jsonStr = string(jsonData)
   return jsonStr
 }
