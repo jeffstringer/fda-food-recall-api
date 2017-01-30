@@ -56,13 +56,13 @@ type Product struct {
   CompanyReleaseLink string `xml:"COMPANY_RELEASE_LINK"`
 }
 
-type productXml struct {
+type recallsData struct {
   Products []Product `xml:"PRODUCT"`
 }
 
 // convert xml to json
 func buildJson(xmlFile []byte) string {
-  var x productXml
+  var x recallsData
   xml.Unmarshal(xmlFile, &x)
 
   var recall jsonRecall
