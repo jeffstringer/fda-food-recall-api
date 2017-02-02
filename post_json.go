@@ -10,11 +10,11 @@ import (
 )
 
 // POST json to rails app
-func postJson(jsonStr string) {
-  str := strings.NewReader(jsonStr)
+func postJson(jsonData []byte) {
+  recalls := strings.NewReader(string(jsonData))
   gotenv.Load()
   postUrl := os.Getenv("POST_URL")
-  request, _ := http.Post(postUrl, "application/json", str)
+  request, _ := http.Post(postUrl, "application/json", recalls)
   fmt.Println("I am posting fda json...", time.Now())
   defer request.Body.Close()
 }

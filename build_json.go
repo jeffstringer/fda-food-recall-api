@@ -61,7 +61,7 @@ type recallsData struct {
 }
 
 // convert xml to json
-func buildJson(xmlFile []byte) string {
+func buildJson(xmlFile []byte) []byte {
   var x recallsData
   xml.Unmarshal(xmlFile, &x)
 
@@ -77,6 +77,5 @@ func buildJson(xmlFile []byte) string {
   }
 
   jsonData, _ := json.Marshal(recalls)
-  var jsonStr = string(jsonData)
-  return jsonStr
+  return jsonData
 }
