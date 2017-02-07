@@ -5,26 +5,8 @@ import (
   "encoding/xml"
 )
 
-/**
-"recall"=>
-  {
-    "release_date"=>"Sat, 28 Jan 2017 15:09:00 -0500",
-    "name"=>"ageLOC TR90",
-    "product_description"=>"Protein boost",
-    "reason"=>"Undeclared milk",
-    "company_release_link"=>"http://www.fda.gov/Safety/Recalls/ucm538725.htm"
-  }
-}
-**/
-
-type jsonRecall struct {
-  Recall struct {
-    Date               string `json:"release_date"`
-    BrandName          string `json:"name"`
-    ProductDescription string `json:"product_description"`
-    Reason             string `json:"reason"`
-    CompanyReleaseLink string `json:"company_release_link"`
-  } `json:"recall"`
+type recallsData struct {
+  Products []Product `xml:"PRODUCT"`
 }
 
 /**
@@ -56,8 +38,26 @@ type Product struct {
   CompanyReleaseLink string `xml:"COMPANY_RELEASE_LINK"`
 }
 
-type recallsData struct {
-  Products []Product `xml:"PRODUCT"`
+/**
+"recall"=>
+  {
+    "release_date"=>"Sat, 28 Jan 2017 15:09:00 -0500",
+    "name"=>"ageLOC TR90",
+    "product_description"=>"Protein boost",
+    "reason"=>"Undeclared milk",
+    "company_release_link"=>"http://www.fda.gov/Safety/Recalls/ucm538725.htm"
+  }
+}
+**/
+
+type jsonRecall struct {
+  Recall struct {
+    Date               string `json:"release_date"`
+    BrandName          string `json:"name"`
+    ProductDescription string `json:"product_description"`
+    Reason             string `json:"reason"`
+    CompanyReleaseLink string `json:"company_release_link"`
+  } `json:"recall"`
 }
 
 // convert xml to json
