@@ -39,7 +39,8 @@ type Product struct {
 }
 
 /**
-"recall"=>
+{
+ "recall"=>
   {
     "release_date"=>"Sat, 28 Jan 2017 15:09:00 -0500",
     "name"=>"ageLOC TR90",
